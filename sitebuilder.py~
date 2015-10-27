@@ -3,7 +3,7 @@ import os
 
 from datetime import date, datetime
 from flask import Flask, render_template, redirect, abort
-from flask-flatpages import FlatPages
+from flask_flatpages import FlatPages
 from flaskext.markdown import Markdown
 from flask.ext.assets import Environment as AssetManager
 from flask_frozen import Freezer
@@ -109,10 +109,11 @@ def index():
 def page(path):
     # compute current "section" from path
     section = path.split('/')[0]
-    print(section)
-    print(path)
+    #print(section)
+    #print(list(pages))
+    #print(path)
     page = pages.get_or_404(path)
-
+    #print(page)
     # ensure an accurate "section" meta is available
     page.meta['section'] = page.meta.get('section', section)
     # allow preview of unpublished stuff in DEBUG mode
@@ -123,15 +124,28 @@ def page(path):
 
 @app.route('/<string:section>/')
 def section(section):
-    template = '%s/index.html' % section
+    if section == 'blog':   # the blog page is not simple, it has to list down entries, so this method
+        template = '%s/index.html' % section
+        #template = '%s/page.html' % section
 
-    if not section_exists(section) and not os.path.exists(template):
+        if not section_exists(section) and not os.path.exists(template):
+                abort(404)
+
+        articles = get_pages(pages, limit=SECTION_MAX_LINKS, section=section)
+
+        years = get_years(get_pages(pages, section=section))
+        print years
+        return render_template(template, pages=articles, years=years, repo=REPO)
+    else:   # These section pages are just rendered MarkDown
+        page = pages.get_or_404(section)
+
+        # ensure an accurate "section" meta is available
+        page.meta['section'] = page.meta.get('section', section)
+        # allow preview of unpublished stuff in DEBUG mode
+        if not app.debug and not page.meta.get('published', False):
             abort(404)
-
-    articles = get_pages(pages, limit=SECTION_MAX_LINKS, section=section)
-
-    years = get_years(get_pages(pages, section=section))
-    return render_template(template, pages=articles, years=years, repo=REPO)
+        template = page.meta.get('template', '%s/page.html' % section)
+        return render_template(template, page=page, section=section)
 
 @app.route('/tag/<string:tag>/')
 def tag(tag):
@@ -144,22 +158,24 @@ def tag(tag):
 
 @freezer.register_generator
 def section():
+    #print(section)
     for page in pages:
         section = page.path.split('/')[0]
         # ensure an accurate "section" meta is available
         section = page.meta.get('section', section)
-
+        print(">>> Freezing section homepage: " + section)
         yield {'section': section}
 
 @freezer.register_generator
 def page():
     pages_path = os.path.join(app.root_path, 'pages')
     for page in list(os.walk(pages_path)):
-        if len(page) >= 3 and not page[1]:
+        if len(page) >= 3:
             dir = page[0].split("/pages")[1]
+            #print dir
             for file in page[2]:
                 path = dir + '/' + file.split(".md")[0]
-                #print(path)
+                print(">>> Freezing file: " + path)
                 yield {'path': path}
 
 
