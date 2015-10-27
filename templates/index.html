@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block contents %}
+<article>
+
+    <figure><img src="{{ repo }}/static/img/us-2013-to-2015.jpg" alt=""></figure>
+{% filter markdown %}
+
+Go Gleegue! OK, am done. Now what should I fill this void with? Hmmm... Quotes! (ingenius! works everytime ;) )
+    
+> "The first principle is that you must not fool yourself and you are the easiest person to fool."
+ - <strong>Richard P. Feynman</strong>
+ 
+> "Stay hungry. Stay foolish." - <strong>Steve Jobs</strong>
+ 
+> "Empty your mind. Be formless, shapeless, like water" - <strong>Bruce Lee</strong>
+{% endfilter %}
+
+</article>
+
+
+{% endblock contents %}

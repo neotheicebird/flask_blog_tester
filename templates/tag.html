@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block contents %}
+    <h2>List of stuff tagged <em>{{ tag }}</em></h2>
+
+{%- for page in pages %}
+<li{% if not page.published %} class="unpublished"{% endif %}>
+<h3>
+<a itemprop="url" href="{{ url_for("page", path=page.path) }}"><span itemprop="name">{{ page.title }}</span></a>
+</h3>
+<p><q itemprop="description"><em>
+{%- if page.meta.summary and page.meta.summary|striptags|trim %}
+{{- page.summary|trim }}
+{%- elif page.html|striptags|trim -%}
+{{- page.html|striptags|trim|truncate(135) }}
+{%- endif -%}
+</em></q></p>
+<hr>
+</li>
+{%- else %}
+<li>No page (yet?)</li>
+{%- endfor %}
+{% endblock contents %}

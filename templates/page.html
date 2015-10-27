@@ -1,0 +1,51 @@
+<article lang="{{ page.lang or "en" }}" class="{{ page.section }}" itemscope itemtype="http://schema.org/{{ item_type or "BlogPosting" }}">
+<link itemprop="url" href="{{ url_for("page", path=page.path) }}">
+<header>
+<h2><a itemprop="name" href="{{ url_for("page", path=page.path) }}">{{ page.title }}</a></h2>
+{%- if page.subtitle -%}
+<h3>{{ page.subtitle }}</h3>
+{%- endif -%}
+</header>
+
+{% if not page.published %}
+<div style="background:orange;color:#fff;padding:5px 10px">⚠ This content is not published</div>
+{% endif %}
+
+<section>
+{{ page.html|safe }}
+</section>
+
+<aside>
+<p class="footer">
+<time datetime="{{ page.date }}" itemprop="datePublished">{{ page.date }}</time>
+{% if section %}— in <a href="{{ url_for("section", section=section) }}" itemprop="genre">{{ section|capitalize }}</a>{% endif %}
+<!-- — <a href="{{ url_for("page", path=page.path) }}">Permalink</a>
+— <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">License</a>-->
+</p>
+</aside>
+
+<hr>
+<nav>
+{% if page.prev -%}
+<a class="prev" href="{{ url_for("page", path=page.prev.path) }}">{{ page.prev.title }}</a>
+{%- endif %}
+{% if page.prev and page.next %}|{% endif %}
+{% if page.next -%}
+<a class="next" href="{{ url_for("page", path=page.next.path) }}">{{ page.next.title }}</a>
+{%- endif %}
+</nav>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'gleegueorg';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</article>

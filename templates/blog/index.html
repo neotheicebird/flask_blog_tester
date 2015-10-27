@@ -1,0 +1,17 @@
+{% extends "blog/base.html" %}
+
+{% block contents %}
+<article>
+    <figure><img src="http://imgs.xkcd.com/comics/blogging.png " alt=""></figure>
+{% filter markdown %}
+Want to say something? you can say it here.
+
+</article>
+{% endfilter %}
+
+<h2>Latest entries</h2>
+<div itemscope itemtype="http://schema.org/blog">
+{% include "_list.html" %}
+</div>
+
+{% endblock contents %}
