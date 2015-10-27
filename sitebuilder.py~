@@ -10,7 +10,7 @@ from flask_frozen import Freezer
 
 
 # configuration
-REPO_NAME = "gleeguesite"
+REPO_NAME = "flask_blog_tester"
 REPO = ""    # default REPO is '', while serving or building the '/' + REPO_NAME is assigned to it
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
 
